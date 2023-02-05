@@ -2,3 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
+body {
+    margin: 0;
+    @apply font-sans tracking-wide text-base bg-gray-900;
+}
