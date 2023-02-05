@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import Sidebar from "../components/Sidebar";
 
 const Dashboard = ({ session }) => {
 	const [loading, setLoading] = useState(true);
@@ -6,9 +7,9 @@ const Dashboard = ({ session }) => {
 	const [website, setWebsite] = useState(null);
 	const [avatar_url, setAvatarUrl] = useState(null);
 
-	useEffect(() => {
-		getUser();
-	}, [session]);
+	// useEffect(() => {
+	// 	getUser();
+	// }, [session]);
 
 	const getUser = async () => {
 		try {
@@ -34,7 +35,11 @@ const Dashboard = ({ session }) => {
 		}
 	};
 
-	return <div>Dashboard</div>;
+	return (
+		<div className="flex">
+			<Sidebar activeItem={0} />
+		</div>
+	);
 };
 
 export default Dashboard;
