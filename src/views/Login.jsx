@@ -8,6 +8,17 @@ const Login = () => {
 
 	const handleLogin = async (e) => {
 		e.preventDefault();
+
+		try {
+			setLoading(true);
+			const { error } = await supabase.auth.signInWithOtp({ email });
+			if (error) throw error;
+			alert("Check your email for the link");
+		} catch (error) {
+			alert(error.error_description || error.message);
+		} finally {
+			setLoading(false);
+		}
 	};
 
 	return (
@@ -33,7 +44,7 @@ const Login = () => {
 						onChange={(e) => setEmail(e.target.value)}
 					/>
 					<button className="text-white text-center w-full rounded bg-green-700 py-1.5 hover:bg-green-600 transition ease-out duration-300">
-						Send magic link
+						{loading ? "Sending magic link..." : "Send magic link"}
 					</button>
 				</form>
 				<div className="text-gray-400 text-sm">
