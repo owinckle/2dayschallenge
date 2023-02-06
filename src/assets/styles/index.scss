@@ -7,10 +7,22 @@
 	letter-spacing: v.$letter-spacing;
 	color: v.$text-color;
 	font-size: v.$font-size;
-}
 
-*:focus {
-	outline: none;
+	&:focus {
+		outline: none;
+	}
+
+	&::-webkit-scrollbar {
+		width: 5px;
+		background-color: v.$bg2;
+		border-radius: 5px;
+	}
+
+	&::-webkit-scrollbar-thumb {
+		background-color: v.$border-color;
+		border-radius: 5px;
+		cursor: pointer;
+	}
 }
 
 body {
@@ -25,19 +37,19 @@ body {
 input,
 select,
 textarea {
+	appearance: none;
+	-webkit-appearance: none;
+	-moz-appearance: none;
 	background: transparent;
 	border: 1px solid v.$border-color;
 	padding: 10px;
 	border-radius: 5px;
 	transition: border 0.3s ease-in-out;
-}
 
-input:focus,
-textarea:focus,
-input:hover,
-textarea:hover,
-select:hover {
-	border-color: v.$primary;
+	&:hover,
+	&:focus {
+		border-color: v.$primary;
+	}
 }
 
 select {
@@ -55,19 +67,23 @@ button {
 	border: 1px solid v.$primary;
 	cursor: pointer;
 	transition: background-color 0.3s ease-in-out;
-}
 
-button:hover {
-	background-color: transparent;
+	&:hover {
+		background-color: transparent;
+	}
+
+	&.transparent {
+		background-color: transparent;
+	}
 }
 
 a {
 	text-decoration: none;
 	transition: color 0.3s ease-in-out;
-}
 
-a:hover {
-	color: v.$primary;
+	&:hover {
+		color: v.$primary;
+	}
 }
 
 /* Utility */
@@ -141,11 +157,13 @@ a:hover {
 	height: 100%;
 
 	.app-content {
+		$padding: 25px;
 		position: fixed;
-		left: 250px;
-		padding: 25px;
-		width: calc(100% - 250px - 25px * 2);
-		max-height: calc(100% - 25px * 2);
+		left: v.$sidebar-width;
+		padding: $padding;
+		padding-bottom: 0;
+		width: calc(100% - v.$sidebar-width - $padding * 2);
+		height: calc(100% - $padding);
 	}
 }
 
@@ -162,20 +180,4 @@ a:hover {
 
 .error404 {
 	gap: 15px;
-}
-
-.project {
-	.project__control-bar {
-		position: fixed;
-		background-color: v.$bg2;
-		height: calc(60px - 1px); /* border size */
-		bottom: 0;
-		left: 250px;
-		padding: 0 25px;
-		width: calc(100% - 250px - 25px * 2);
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		border-top: 1px solid v.$border-color;
-	}
 }

@@ -1,12 +1,19 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { Link } from "react-router-dom";
+import ReactMarkdown from "react-markdown";
+import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
+import { atomDark } from "react-syntax-highlighter/dist/esm/styles/prism";
+
+import "../assets/styles/project.scss";
+
 import Sidebar from "../components/Sidebar";
 
 const Project = () => {
 	const { projectId } = useParams();
 	const [project, setProject] = useState(null);
-	const [page, setPage] = useState(null);
+	const [markdown, setMarkdown] = useState("");
+	const [previewMode, setPreviewMode] = useState(false);
 
 	useEffect(() => {
 		getProject();
@@ -49,17 +56,80 @@ const Project = () => {
 					</select>
 				</div>
 
-				<ControlBar />
+				<ProjectEditor
+					markdown={markdown}
+					setMarkdown={setMarkdown}
+					previewMode={previewMode}
+				/>
+
+				<ControlBar
+					previewMode={previewMode}
+					togglePreviewMode={() => setPreviewMode(!previewMode)}
+				/>
 			</div>
 		</div>
 	);
 };
 
-const ControlBar = () => {
+const ControlBar = ({ previewMode, togglePreviewMode }) => {
 	return (
 		<div className="project__control-bar">
-			<div className="text-sub">Saved at 14h58</div>
-			<button>Save</button>
+			<div className="text-sub">Saved at 4:53pm</div>
+			<div className="project__control-bar__controls">
+				<button
+					onClick={togglePreviewMode}
+					className={previewMode ? "" : " transparent"}
+				>
+					Preview
+				</button>
+				<button>Save</button>
+			</div>
+		</div>
+	);
+};
+
+const ProjectEditor = ({ markdown, setMarkdown, previewMode }) => {
+	return (
+		<div
+			className={
+				"project__editor" +
+				(previewMode ? " project__editor--preview" : "")
+			}
+		>
+			{previewMode ? (
+				<ReactMarkdown
+					children={markdown}
+					components={{
+						code({ node, inline, className, children, ...props }) {
+							const match = /language-(\w+)/.exec(
+								className || ""
+							);
+							return !inline && match ? (
+								<SyntaxHighlighter
+									children={String(children).replace(
+										/\n$/,
+										""
+									)}
+									style={atomDark}
+									language={match[1]}
+									PreTag="div"
+									{...props}
+								/>
+							) : (
+								<code className={className} {...props}>
+									{children}
+								</code>
+							);
+						},
+					}}
+				/>
+			) : (
+				<textarea
+					placeholder="Start writing here..."
+					value={markdown}
+					onChange={(e) => setMarkdown(e.target.value)}
+				></textarea>
+			)}
 		</div>
 	);
 };
