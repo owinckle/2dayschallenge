@@ -36,7 +36,7 @@ const Dashboard = ({ session }) => {
 	};
 
 	return (
-		<div className="flex">
+		<div className="app-container">
 			<Sidebar activeItem={0} />
 		</div>
 	);

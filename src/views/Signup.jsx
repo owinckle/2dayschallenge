@@ -35,7 +35,7 @@ const Signup = () => {
 					onChange={(e) => setPassword(e.target.value)}
 				/>
 			</AuthForm>
-			<div className="text-gray-400 text-sm">
+			<div className="text-sub">
 				Already have an account?{" "}
 				<Link
 					to="/login"

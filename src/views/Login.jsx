@@ -48,14 +48,8 @@ const Login = () => {
 					onChange={(e) => setPassword(e.target.value)}
 				/>
 			</AuthForm>
-			<div className="text-gray-400 text-sm">
-				Don't have an account?{" "}
-				<Link
-					to="/signup"
-					className="text-white underline cursor-pointer"
-				>
-					Sign up
-				</Link>
+			<div className="text-sub">
+				Don't have an account? <Link to="/signup">Sign up</Link>
 			</div>
 		</CenterLayout>
 	);

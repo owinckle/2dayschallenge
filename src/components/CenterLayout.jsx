@@ -1,7 +1,14 @@
 const CenterLayout = ({ children }) => {
 	return (
-		<div className="flex h-screen justify-center items-center">
-			<div className="shadow-md w-96 p-6 bg-gray-800 rounded">
+		<div
+			style={{
+				display: "flex",
+				height: "100vh",
+				justifyContent: "center",
+				alignItems: "center",
+			}}
+		>
+			<div className="bg-2 rounded flex flex-col auth-modal">
 				{children}
 			</div>
 		</div>

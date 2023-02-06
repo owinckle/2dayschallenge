@@ -1,0 +1,181 @@
+@use "variables" as v;
+
+/* Resets */
+* {
+	font-family: v.$font-family;
+	margin: 0;
+	letter-spacing: v.$letter-spacing;
+	color: v.$text-color;
+	font-size: v.$font-size;
+}
+
+*:focus {
+	outline: none;
+}
+
+body {
+	background-color: v.$bg;
+	height: 100vh;
+}
+
+#root {
+	height: 100%;
+}
+
+input,
+select,
+textarea {
+	background: transparent;
+	border: 1px solid v.$border-color;
+	padding: 10px;
+	border-radius: 5px;
+	transition: border 0.3s ease-in-out;
+}
+
+input:focus,
+textarea:focus,
+input:hover,
+textarea:hover,
+select:hover {
+	border-color: v.$primary;
+}
+
+select {
+	cursor: pointer;
+}
+
+option {
+	background-color: v.$bg;
+}
+
+button {
+	background-color: v.$primary;
+	padding: 10px;
+	border-radius: 5px;
+	border: 1px solid v.$primary;
+	cursor: pointer;
+	transition: background-color 0.3s ease-in-out;
+}
+
+button:hover {
+	background-color: transparent;
+}
+
+a {
+	text-decoration: none;
+	transition: color 0.3s ease-in-out;
+}
+
+a:hover {
+	color: v.$primary;
+}
+
+/* Utility */
+.title-bottom-space {
+	margin-bottom: 5px;
+}
+
+.bg {
+	background-color: v.$bg;
+}
+
+.bg-2 {
+	background-color: v.$bg2;
+}
+
+.text-sub {
+	color: v.$text-sub;
+}
+
+.text-xl {
+	font-size: 1.3rem;
+}
+
+.text-6xl {
+	font-size: 3rem;
+}
+
+.rounded {
+	border-radius: 5px;
+}
+
+.cursor-pointer {
+	cursor: pointer;
+}
+
+.text-center {
+	text-align: center;
+}
+
+.text-right {
+	text-align: right;
+}
+
+.flex {
+	display: flex;
+}
+
+.flex-col {
+	flex-direction: column;
+}
+
+.items-center {
+	align-items: center;
+}
+
+.justify-between {
+	justify-content: space-between;
+}
+
+.grid {
+	display: grid;
+	gap: 20px;
+}
+
+.grid-4 {
+	grid-template-columns: repeat(4, minmax(0, 100%));
+}
+
+/* Custom Styles */
+.app-container {
+	height: 100%;
+
+	.app-content {
+		position: fixed;
+		left: 250px;
+		padding: 25px;
+		width: calc(100% - 250px - 25px * 2);
+		max-height: calc(100% - 25px * 2);
+	}
+}
+
+.auth-modal {
+	gap: 20px;
+	padding: 20px;
+	min-width: 400px;
+
+	.auth-modal__form,
+	.auth-modal__head {
+		gap: 10px;
+	}
+}
+
+.error404 {
+	gap: 15px;
+}
+
+.project {
+	.project__control-bar {
+		position: fixed;
+		background-color: v.$bg2;
+		height: calc(60px - 1px); /* border size */
+		bottom: 0;
+		left: 250px;
+		padding: 0 25px;
+		width: calc(100% - 250px - 25px * 2);
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		border-top: 1px solid v.$border-color;
+	}
+}

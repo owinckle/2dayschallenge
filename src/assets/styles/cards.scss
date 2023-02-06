@@ -1,0 +1,23 @@
+@use "variables" as v;
+
+.card {
+	padding: 15px;
+	background-color: v.$bg2;
+	border-radius: 5px;
+
+	&.card-project {
+		transition: background-color 0.3s ease-in-out;
+
+		.card-project__icon {
+			transition: transform 0.3s ease-in-out;
+		}
+
+		&:hover {
+			background-color: v.$primary;
+
+			.card-project__icon {
+				transform: scale(1.1) translateX(2px);
+			}
+		}
+	}
+}

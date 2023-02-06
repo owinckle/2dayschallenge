@@ -1,31 +1,35 @@
+import { Link } from "react-router-dom";
+
 import Sidebar from "../components/Sidebar";
 
 // Icons
 import { BiChevronRight } from "react-icons/bi";
 
+import "../assets/styles/cards.scss";
+
 const Projects = () => {
 	return (
-		<>
+		<div className="app-container">
 			<Sidebar activeItem={1} />
-			<div className="fixed w-[calc(100%-15rem)] grid grid-cols-4 left-60 p-6 gap-6">
-				<ProjectCard title="test" />
-				<ProjectCard title="test" />
-				<ProjectCard title="test" />
-				<ProjectCard title="test" />
-				<ProjectCard title="test" />
+			<div className="app-content grid grid-4">
+				<ProjectCard title="test" target="/project/1" />
+				<ProjectCard title="test" target="/project/2" />
+				<ProjectCard title="test" target="/project/3" />
+				<ProjectCard title="test" target="/project/4" />
+				<ProjectCard title="test" target="/project/5" />
 			</div>
-		</>
+		</div>
 	);
 };
 
-const ProjectCard = ({ title }) => {
+const ProjectCard = ({ title, target }) => {
 	return (
-		<div className="group shadow-md bg-gray-800 rounded p-3 hover:bg-gray-700 transition ease-in-out duration-300 cursor-pointer">
+		<Link to={target} className="card cursor-pointer card-project">
 			<div className="flex justify-between items-center">
 				<div>{title}</div>
-				<BiChevronRight className="text-lg text-gray-400 transition ease-in-out duration-300 group-hover:text-white group-hover:scale-x-105 relative group-hover:translate-x-1" />
+				<BiChevronRight className="text-xl card-project__icon" />
 			</div>
-		</div>
+		</Link>
 	);
 };
 
