@@ -15,9 +15,15 @@ const Login = () => {
 
 		try {
 			setLoading(true);
-			const { error } = await supabase.auth.signInWithOtp({ email });
-			if (error) throw error;
-			alert("Check your email for the link");
+			const { error } = await supabase.auth.signInWithPassword({
+				email,
+				password,
+			});
+			if (error) {
+				throw error;
+			} else {
+				window.location.href = "/dashboard";
+			}
 		} catch (error) {
 			alert(error.error_description || error.message);
 		} finally {

@@ -13,6 +13,18 @@
 		border-color: v.$border-color;
 	}
 
+	.project__no-pages {
+		display: flex;
+		flex-direction: column;
+		gap: 15px;
+		width: fit-content;
+		top: calc(50% - $control-bar-height);
+
+		button {
+			width: fit-content;
+		}
+	}
+
 	.project__control-bar {
 		position: fixed;
 		background-color: v.$bg2;

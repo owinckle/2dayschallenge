@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { Link } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
@@ -8,27 +8,39 @@ import { atomDark } from "react-syntax-highlighter/dist/esm/styles/prism";
 import "../assets/styles/project.scss";
 
 import Sidebar from "../components/Sidebar";
+import { supabase } from "../supbaseClient";
+import AppContext from "../contexts/AppContext";
+import ModalContext from "../contexts/ModalContext";
 
 const Project = () => {
+	const { user } = useContext(AppContext);
+	const { openNewPageModal } = useContext(ModalContext);
 	const { projectId } = useParams();
 	const [project, setProject] = useState(null);
+	const [pages, setPages] = useState([]);
 	const [markdown, setMarkdown] = useState("");
 	const [previewMode, setPreviewMode] = useState(false);
 
 	useEffect(() => {
 		getProject();
+		getPages();
 	}, [projectId]);
 
-	const getProject = () => {
-		// Fetch the project
+	const getProject = async () => {
+		const { data, error } = await supabase
+			.from("projects")
+			.select(`name`)
+			.eq("id", projectId);
 
-		// For testing purposes
-		setTimeout(() => {
-			setProject({
-				id: projectId,
-				name: "Jeff",
-			});
-		}, 500);
+		setProject(data[0]);
+	};
+
+	const getPages = async () => {
+		const { data, error } = await supabase
+			.from("pages")
+			.select(`id, name`)
+			.eq("project", projectId);
+		setPages(data);
 	};
 
 	return (
@@ -49,23 +61,41 @@ const Project = () => {
 							docs.domain.com
 						</Link>
 					</div>
-					<select>
-						<option>Getting started</option>
-						<option>How to something</option>
-						<option>And something else?</option>
-					</select>
+					{pages.length !== 0 ? (
+						<select>
+							{pages.map((page, key) => (
+								<option key={key} value={page.id}>
+									{page.name}
+								</option>
+							))}
+						</select>
+					) : null}
 				</div>
 
-				<ProjectEditor
-					markdown={markdown}
-					setMarkdown={setMarkdown}
-					previewMode={previewMode}
-				/>
-
-				<ControlBar
-					previewMode={previewMode}
-					togglePreviewMode={() => setPreviewMode(!previewMode)}
-				/>
+				{pages.length !== 0 ? (
+					<>
+						<ProjectEditor
+							markdown={markdown}
+							setMarkdown={setMarkdown}
+							previewMode={previewMode}
+						/>
+						<ControlBar
+							previewMode={previewMode}
+							togglePreviewMode={() =>
+								setPreviewMode(!previewMode)
+							}
+						/>
+					</>
+				) : (
+					<div className="project__no-pages center">
+						<div className="text-sub">
+							Create your first page to get started
+						</div>
+						<button className="center-x" onClick={openNewPageModal}>
+							Create
+						</button>
+					</div>
+				)}
 			</div>
 		</div>
 	);

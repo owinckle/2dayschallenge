@@ -6,17 +6,38 @@ import Sidebar from "../components/Sidebar";
 import { BiChevronRight } from "react-icons/bi";
 
 import "../assets/styles/cards.scss";
+import { useContext, useEffect, useState } from "react";
+import AppContext from "../contexts/AppContext";
+import { supabase } from "../supbaseClient";
 
 const Projects = () => {
+	const { user } = useContext(AppContext);
+	const [projects, setProjects] = useState([]);
+
+	useEffect(() => {
+		getProjects();
+	}, []);
+
+	const getProjects = async () => {
+		const { data, error } = await supabase
+			.from("projects")
+			.select(`id, name`)
+			.eq("user_uuid", user.id);
+
+		setProjects(data);
+	};
+
 	return (
 		<div className="app-container">
 			<Sidebar activeItem={1} />
 			<div className="app-content grid grid-4">
-				<ProjectCard title="test" target="/project/1" />
-				<ProjectCard title="test" target="/project/2" />
-				<ProjectCard title="test" target="/project/3" />
-				<ProjectCard title="test" target="/project/4" />
-				<ProjectCard title="test" target="/project/5" />
+				{projects.map((project, key) => (
+					<ProjectCard
+						key={key}
+						title={project.name}
+						target={"/project/" + project.id}
+					/>
+				))}
 			</div>
 		</div>
 	);

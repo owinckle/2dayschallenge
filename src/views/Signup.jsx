@@ -3,13 +3,33 @@ import { useState } from "react";
 import CenterLayout from "../components/CenterLayout";
 import AuthForm from "../components/AuthForm";
 import { Link } from "react-router-dom";
+import { supabase } from "../supbaseClient";
 
 const Signup = () => {
+	const [loading, setLoading] = useState(false);
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 
 	const handleSignup = async (e) => {
 		e.preventDefault();
+
+		try {
+			setLoading(true);
+			const { error } = await supabase.auth.signUp({
+				email,
+				password,
+			});
+
+			if (error) {
+				throw error;
+			} else {
+				window.location.href = "/dashboard";
+			}
+		} catch (error) {
+			alert(error.error_description || error.message);
+		} finally {
+			setLoading(false);
+		}
 	};
 
 	return (

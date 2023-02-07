@@ -1,0 +1,62 @@
+@use "variables" as v;
+
+.modal-overlay {
+	position: fixed;
+	top: 0;
+	left: 0;
+	height: 100%;
+	width: 100%;
+	background-color: v.$overlay;
+	z-index: 9999;
+	opacity: 1;
+	transition: opacity 0.3s ease-in-out;
+
+	&.modal--closing {
+		opacity: 0;
+	}
+}
+
+.modal {
+	$width: 500px;
+	$padding: 15px;
+	$head-height: 60px;
+	$footer-height: 60px;
+
+	position: fixed;
+	top: 0;
+	right: 0;
+	width: $width;
+	z-index: 99999;
+	background-color: v.$bg2;
+	height: 100%;
+	transition: right 0.3s ease-in-out;
+
+	&.modal--closing {
+		right: calc($width * -1);
+	}
+
+	.modal__head {
+		height: $head-height;
+		border-bottom: 1px solid v.$border-color;
+	}
+
+	.modal__footer {
+		height: $footer-height;
+		border-top: 1px solid v.$border-color;
+		display: flex;
+		gap: 15px;
+		justify-content: right;
+	}
+
+	.modal__head,
+	.modal__footer {
+		display: flex;
+		align-items: center;
+		padding: 0 $padding;
+	}
+
+	.modal__body {
+		height: calc(100% - $footer-height - $head-height);
+		overflow-y: auto;
+	}
+}

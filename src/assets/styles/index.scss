@@ -1,5 +1,7 @@
 @use "variables" as v;
 
+@import url(https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap);
+
 /* Resets */
 * {
 	font-family: v.$font-family;
@@ -7,6 +9,7 @@
 	letter-spacing: v.$letter-spacing;
 	color: v.$text-color;
 	font-size: v.$font-size;
+	font-weight: v.$font-weight;
 
 	&:focus {
 		outline: none;
@@ -141,6 +144,25 @@ a {
 
 .justify-between {
 	justify-content: space-between;
+}
+
+.center {
+	position: relative;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+}
+
+.center-x {
+	position: relative;
+	left: 50%;
+	transform: translateX(-50%);
+}
+
+.center-y {
+	position: relative;
+	left: 50%;
+	transform: translateY(-50%);
 }
 
 .grid {
