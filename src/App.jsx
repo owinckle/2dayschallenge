@@ -15,7 +15,8 @@ import SecuredRoute from "./components/SecuredRoute";
 // Contexts
 import AppContext from "./contexts/AppContext";
 import ModalContext from "./contexts/ModalContext";
-import Modal from "./components/Modal";
+import Modal, { ModalInput } from "./components/Modal";
+import Notifications from "./components/Notifications";
 
 function App() {
 	const [loading, setLoading] = useState(true);
@@ -23,6 +24,24 @@ function App() {
 
 	// New page
 	const [newPageModal, setNewPageModal] = useState(false);
+	const [newPageProject, setNewPageProject] = useState(null);
+	const [newPageName, setNewPageName] = useState("");
+
+	const openNewPageModal = (project) => {
+		setNewPageModal(true);
+		setNewPageProject(project);
+		setNewPageName("");
+	};
+
+	const createNewPage = () => {
+		console.log("Create new page modal");
+		if (newPageName === "") {
+			return {
+				error: true,
+				error_message: "The page name can't be empty",
+			};
+		}
+	};
 
 	useEffect(() => {
 		checkAuth();
@@ -56,7 +75,7 @@ function App() {
 		<AppContext.Provider value={{ user }}>
 			<ModalContext.Provider
 				value={{
-					openNewPageModal: () => setNewPageModal(true),
+					openNewPageModal: openNewPageModal,
 				}}
 			>
 				<BrowserRouter>
@@ -111,12 +130,23 @@ function App() {
 						<Route path="*" element={<Error404 />} />
 					</Routes>
 
+					{/* Notifications */}
+					<Notifications />
+
 					{/* Modals */}
 					{newPageModal ? (
 						<Modal
 							title="Create new page"
 							onClose={() => setNewPageModal(false)}
-						></Modal>
+							onSubmit={createNewPage}
+						>
+							<ModalInput
+								type="text"
+								label="Name"
+								value={newPageName}
+								onChange={setNewPageName}
+							/>
+						</Modal>
 					) : null}
 				</BrowserRouter>
 			</ModalContext.Provider>

@@ -1,10 +1,18 @@
 import { useState } from "react";
 import "../assets/styles/modal.scss";
 
-const Modal = ({ title, onClose }) => {
+const Modal = ({ title, onClose, onSubmit, children }) => {
 	const [closing, setClosing] = useState(false);
 
-	const onCloseHandler = () => {
+	const onCloseHandler = async (callback) => {
+		if (callback) {
+			const response = await callback();
+			if (response.error) {
+				// Add error message
+
+				return;
+			}
+		}
 		setClosing(true);
 		setTimeout(() => {
 			onClose();
@@ -22,16 +30,34 @@ const Modal = ({ title, onClose }) => {
 					<div className="modal__head__title">{title}</div>
 				</div>
 
-				<div className="modal__body"></div>
+				<div className="modal__body">{children}</div>
 
 				<div className="modal__footer">
-					<button className="transparent" onClick={onCloseHandler}>
+					<button
+						className="transparent"
+						onClick={() => onCloseHandler(null)}
+					>
 						Cancel
 					</button>
-					<button>Save</button>
+					<button onClick={() => onCloseHandler(onSubmit)}>
+						Save
+					</button>
 				</div>
 			</div>
 		</>
+	);
+};
+
+export const ModalInput = ({ type, label, value, onChange }) => {
+	return (
+		<div className="modal__body__input">
+			<label>{label}</label>
+			<input
+				type={type}
+				value={value}
+				onChange={(e) => onChange(e.target.value)}
+			/>
+		</div>
 	);
 };
 

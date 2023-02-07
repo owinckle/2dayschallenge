@@ -22,8 +22,12 @@ const Project = () => {
 	const [previewMode, setPreviewMode] = useState(false);
 
 	useEffect(() => {
-		getProject();
-		getPages();
+		// getProject();
+		// getPages();
+
+		setProject({ name: "Test project" });
+		// setPages([{ id: 1, name: "Test Page" }]);
+		setPages([]);
 	}, [projectId]);
 
 	const getProject = async () => {

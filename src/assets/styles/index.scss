@@ -107,11 +107,11 @@ a {
 }
 
 .text-xl {
-	font-size: 1.3rem;
+	font-size: v.$text-xl;
 }
 
 .text-6xl {
-	font-size: 3rem;
+	font-size: v.$text-6xl;
 }
 
 .rounded {

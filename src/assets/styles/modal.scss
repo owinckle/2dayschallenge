@@ -56,7 +56,18 @@
 	}
 
 	.modal__body {
-		height: calc(100% - $footer-height - $head-height);
+		padding: $padding;
+		height: calc(100% - $footer-height - $head-height - $padding * 2);
 		overflow-y: auto;
+
+		.modal__body__input {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+
+			input {
+				width: 70%;
+			}
+		}
 	}
 }
