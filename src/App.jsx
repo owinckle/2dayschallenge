@@ -34,13 +34,29 @@ function App() {
 	};
 
 	const createNewPage = () => {
-		console.log("Create new page modal");
 		if (newPageName === "") {
 			return {
 				error: true,
-				error_message: "The page name can't be empty",
+				error_message: "A name is required",
 			};
 		}
+		createNotification("Page created", newPageName + " has been created");
+	};
+
+	// Notifications
+	const [notifications, setNotifications] = useState([]);
+
+	const createNotification = (title, details) => {
+		setNotifications((prevNotifications) => [{
+			id: Date.now(),
+			title: title,
+			details: details,
+			seen: false
+		}, ...prevNotifications]);
+	}
+
+	const removeNotification = (id) => {
+		setNotifications((prevNotifications) => prevNotifications.filter((noti) => noti.id !== id));
 	};
 
 	useEffect(() => {
@@ -72,7 +88,7 @@ function App() {
 	}
 
 	return (
-		<AppContext.Provider value={{ user }}>
+		<AppContext.Provider value={{ user, createNotification }}>
 			<ModalContext.Provider
 				value={{
 					openNewPageModal: openNewPageModal,
@@ -131,7 +147,7 @@ function App() {
 					</Routes>
 
 					{/* Notifications */}
-					<Notifications />
+					<Notifications notifications={notifications} removeNotification={removeNotification} />
 
 					{/* Modals */}
 					{newPageModal ? (

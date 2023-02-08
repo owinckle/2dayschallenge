@@ -1,15 +1,17 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import "../assets/styles/modal.scss";
+import AppContext from "../contexts/AppContext";
 
 const Modal = ({ title, onClose, onSubmit, children }) => {
+	const { createNotification } = useContext(AppContext);
+
 	const [closing, setClosing] = useState(false);
 
 	const onCloseHandler = async (callback) => {
 		if (callback) {
 			const response = await callback();
-			if (response.error) {
-				// Add error message
-
+			if (response && response.error) {
+				createNotification("Error", response.error_message);
 				return;
 			}
 		}
@@ -23,7 +25,7 @@ const Modal = ({ title, onClose, onSubmit, children }) => {
 		<>
 			<div
 				className={"modal-overlay" + (closing ? " modal--closing" : "")}
-				onClick={onCloseHandler}
+				onClick={() => onCloseHandler(null)}
 			></div>
 			<div className={"modal" + (closing ? " modal--closing" : "")}>
 				<div className="modal__head">

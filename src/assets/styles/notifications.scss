@@ -2,13 +2,14 @@
 
 .notifications {
 	$padding: 15px;
+	$width: 250px;
 
 	padding: $padding;
 	position: fixed;
 	right: 0;
 	top: 0;
-	z-index: 99999;
-	width: 250px;
+	z-index: 999999;
+	width: $width;
 	display: flex;
 	flex-direction: column;
 	gap: $padding;
@@ -20,6 +21,13 @@
 		background: v.$bg2;
 		border-radius: 5px;
 		box-shadow: v.$box-shadow;
+		position: relative;
+		right: 0;
+		transition: right .3s ease-in-out;
+
+		&.notification--closing {
+			right: calc($width * -1 - $padding);
+		}
 
 		.notification__header {
 			display: flex;
