@@ -13,6 +13,7 @@ import AppContext from "../contexts/AppContext";
 import ModalContext from "../contexts/ModalContext";
 
 const Project = () => {
+	const { appKey } = useContext(AppContext);
 	const { openNewPageModal } = useContext(ModalContext);
 	const { projectId } = useParams();
 
@@ -25,7 +26,7 @@ const Project = () => {
 	useEffect(() => {
 		getProject();
 		getPages();
-	}, [projectId]);
+	}, [projectId, appKey]);
 
 	const getProject = async () => {
 		const { data, error } = await supabase
@@ -42,8 +43,16 @@ const Project = () => {
 			.select(`id, name, content`)
 			.eq("project", projectId);
 		setPages(data);
-		setCurrentPageId(data[0].id);
-		setMarkdown(data[0].content);
+
+		if (data.length != 0) {
+			setCurrentPageId(data[0].id);
+			setMarkdown(data[0].content);
+		}
+	};
+
+	const selectPage = (pageId) => {
+		setCurrentPageId(pageId);
+		setMarkdown(pages.find((page) => page.id === parseInt(pageId)).content);
 	};
 
 	return (
@@ -67,14 +76,20 @@ const Project = () => {
 						</div>
 						{pages.length !== 0 ? (
 							<div className="flex gap">
-								<select>
-									{pages.map((page, key) => (
-										<option key={key} value={page.id}>
+								<select
+									onChange={(e) => selectPage(e.target.value)}
+								>
+									{pages.map((page) => (
+										<option key={page.id} value={page.id}>
 											{page.name}
 										</option>
 									))}
 								</select>
-								<button onClick={() => openNewPageModal(project.id)}>New page</button>
+								<button
+									onClick={() => openNewPageModal(project.id)}
+								>
+									New page
+								</button>
 							</div>
 						) : null}
 					</div>
@@ -98,17 +113,21 @@ const Project = () => {
 							<div className="text-sub">
 								Create your first page to get started
 							</div>
-							<button className="center-x" onClick={() => openNewPageModal(project.id)}>
+							<button
+								className="center-x"
+								onClick={() => openNewPageModal(project.id)}
+							>
 								Create
 							</button>
 						</div>
 					)}
-
-
 				</div>
-				<ProjectSidebar project={project} page={pages.find((page) => page.id === currentPageId)} />
+				<ProjectSidebar
+					project={project}
+					page={pages.find((page) => page.id === currentPageId)}
+				/>
 			</div>
-		</div >
+		</div>
 	);
 };
 
@@ -176,14 +195,28 @@ const ProjectEditor = ({ markdown, setMarkdown, previewMode }) => {
 };
 
 const ProjectSidebar = ({ project, page }) => {
-	return <div className="project__sidebar">
-		<div className="project__sidebar__section">
-			<div className="project_sidebar__section__name">Project settings</div>
+	return (
+		<div className="project__sidebar">
+			<div className="project__sidebar__section">
+				<div className="project__sidebar__section__name">
+					Project settings
+				</div>
+				<div className="project__sidebar__input">
+					<label>Project name</label>
+					<input type="text" value={project.name} />
+				</div>
+			</div>
+			<div className="project__sidebar__section">
+				<div className="project__sidebar__section__name">
+					Page settings
+				</div>
+				<div className="project__sidebar__input">
+					<label>Page name</label>
+					<input type="text" value={page.name} />
+				</div>
+			</div>
 		</div>
-		<div className="project__sidebar__section">
-			<div className="project_sidebar__section__name">Page settings</div>
-		</div>
-	</div>
-}
+	);
+};
 
 export default Project;

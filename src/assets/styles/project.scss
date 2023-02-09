@@ -2,7 +2,7 @@
 
 .project {
 	$control-bar-height: 70px;
-	$sidebar-width: 300px;
+	$sidebar-width: 475px;
 
 	display: grid;
 	grid-template-columns: auto $sidebar-width;
@@ -41,8 +41,31 @@
 		position: relative;
 		top: -25px;
 		height: 100%;
-		width: calc(100% - 25px);
+		width: calc(100% - 25px - 1px);
 		padding: 25px;
+		border-left: 1px solid v.$border-color;
+
+		.project__sidebar__section {
+			$spacing: 15px;
+			margin-bottom: $spacing;
+			padding-bottom: $spacing;
+
+			.project__sidebar__section__name {
+				font-size: 1.1rem;
+				margin-bottom: $spacing;
+				color: v.$text-sub;
+			}
+
+			.project__sidebar__input {
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+
+				input {
+					width: 60%;
+				}
+			}
+		}
 	}
 
 	.project__control-bar {
@@ -72,7 +95,9 @@
 	.project__editor {
 		padding-top: 15px;
 		border-top: 1px solid v.$border-color;
-		height: calc(100% - $control-bar-height - 25px); // 25px: content padding
+		height: calc(
+			100% - $control-bar-height - 25px
+		); // 25px: content padding
 		line-height: 1.8;
 		margin-bottom: -25px;
 		margin-right: 25px;

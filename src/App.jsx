@@ -25,7 +25,7 @@ function App() {
 
 	const updateAppKey = () => {
 		setAppKey(Date.now());
-	}
+	};
 
 	// New project
 	const [newProjectModal, setNewProjectModal] = useState(false);
@@ -35,28 +35,32 @@ function App() {
 		if (newProjectName === "") {
 			return {
 				error: true,
-				error_message: "A project name is required"
-			}
+				error_message: "A project name is required",
+			};
 		}
 
 		const { error } = await supabase.from("projects").insert({
 			name: newProjectName,
-			user_uuid: user.id
-		})
+			user_uuid: user.id,
+		});
 
 		if (error) {
-			if (error.code == "23505") { // Duplicate name
+			if (error.code == "23505") {
+				// Duplicate name
 				return {
 					error: true,
-					error_message: "A project with this name already exists"
-				}
+					error_message: "A project with this name already exists",
+				};
 			}
 		}
 
 		updateAppKey();
-		createNotification("Project created", newProjectName + " has been created");
+		createNotification(
+			"Project created",
+			newProjectName + " has been created"
+		);
 		setNewProjectName("");
-	}
+	};
 
 	// New page
 	const [newPageModal, setNewPageModal] = useState(false);
@@ -73,16 +77,17 @@ function App() {
 		if (newPageName === "") {
 			return {
 				error: true,
-				error_message: "A page name is required"
+				error_message: "A page name is required",
 			};
 		}
 
 		const { error } = await supabase.from("pages").insert({
 			name: newPageName,
 			project: newPageProjectId,
-			content: "# " + newPageName
-		})
+			content: "# " + newPageName,
+		});
 
+		updateAppKey();
 		createNotification("Page created", newPageName + " has been created");
 	};
 
@@ -90,16 +95,21 @@ function App() {
 	const [notifications, setNotifications] = useState([]);
 
 	const createNotification = (title, details) => {
-		setNotifications((prevNotifications) => [{
-			id: Date.now(),
-			title: title,
-			details: details,
-			seen: false
-		}, ...prevNotifications]);
-	}
+		setNotifications((prevNotifications) => [
+			{
+				id: Date.now(),
+				title: title,
+				details: details,
+				seen: false,
+			},
+			...prevNotifications,
+		]);
+	};
 
 	const removeNotification = (id) => {
-		setNotifications((prevNotifications) => prevNotifications.filter((noti) => noti.id !== id));
+		setNotifications((prevNotifications) =>
+			prevNotifications.filter((noti) => noti.id !== id)
+		);
 	};
 
 	useEffect(() => {
@@ -131,11 +141,13 @@ function App() {
 	}
 
 	return (
-		<AppContext.Provider value={{ appKey: appKey, user, createNotification }}>
+		<AppContext.Provider
+			value={{ appKey: appKey, user, createNotification }}
+		>
 			<ModalContext.Provider
 				value={{
 					openNewProjectModal: () => setNewProjectModal(true),
-					openNewPageModal: openNewPageModal
+					openNewPageModal: openNewPageModal,
 				}}
 			>
 				<BrowserRouter>
@@ -191,7 +203,10 @@ function App() {
 					</Routes>
 
 					{/* Notifications */}
-					<Notifications notifications={notifications} removeNotification={removeNotification} />
+					<Notifications
+						notifications={notifications}
+						removeNotification={removeNotification}
+					/>
 
 					{/* Modals */}
 					{newPageModal ? (
@@ -211,8 +226,12 @@ function App() {
 						</Modal>
 					) : null}
 
-					{newProjectModal ?
-						<Modal title="Create a new project" onClose={() => setNewProjectModal(false)} onSubmit={createNewProject}>
+					{newProjectModal ? (
+						<Modal
+							title="Create a new project"
+							onClose={() => setNewProjectModal(false)}
+							onSubmit={createNewProject}
+						>
 							<ModalInput
 								type="text"
 								label="Name"
@@ -222,7 +241,7 @@ function App() {
 								autoFocus
 							/>
 						</Modal>
-						: null}
+					) : null}
 				</BrowserRouter>
 			</ModalContext.Provider>
 		</AppContext.Provider>
