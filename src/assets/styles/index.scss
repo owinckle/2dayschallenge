@@ -4,12 +4,14 @@
 
 /* Resets */
 * {
-	font-family: v.$font-family;
-	margin: 0;
-	letter-spacing: v.$letter-spacing;
-	color: v.$text-color;
-	font-size: v.$font-size;
-	font-weight: v.$font-weight;
+	&:not(.project__editor--preview *) {
+		font-family: v.$font-family;
+		margin: 0;
+		letter-spacing: v.$letter-spacing;
+		color: v.$text-color;
+		font-size: v.$font-size;
+		font-weight: v.$font-weight;
+	}
 
 	&:focus {
 		outline: none;
@@ -44,7 +46,7 @@ textarea {
 	-webkit-appearance: none;
 	-moz-appearance: none;
 	background: transparent;
-	border: 1px solid v.$border-color;
+	border: 2px solid v.$border-color;
 	padding: 10px;
 	border-radius: 5px;
 	transition: border 0.3s ease-in-out;
@@ -67,17 +69,23 @@ button {
 	background-color: v.$primary;
 	padding: 10px;
 	border-radius: 5px;
-	border: 1px solid v.$primary;
+	border: 2px solid v.$primary;
 	cursor: pointer;
 	transition: background-color 0.3s ease-in-out;
+
+	&.transparent {
+		background-color: transparent;
+	}
+
+	&.danger {
+		background-color: v.$danger;
+		border-color: v.$danger;
+	}
 
 	&:hover {
 		background-color: transparent;
 	}
 
-	&.transparent {
-		background-color: transparent;
-	}
 }
 
 a {
@@ -92,6 +100,10 @@ a {
 /* Utility */
 .title-bottom-space {
 	margin-bottom: 5px;
+}
+
+.row-spacer {
+	margin-bottom: 15px;
 }
 
 .bg {
@@ -165,6 +177,10 @@ a {
 	transform: translateY(-50%);
 }
 
+.gap {
+	gap: 15px;
+}
+
 .grid {
 	display: grid;
 	gap: 20px;
@@ -176,16 +192,16 @@ a {
 
 /* Custom Styles */
 .app-container {
+	$padding: 25px;
+	
 	height: 100%;
 
 	.app-content {
-		$padding: 25px;
 		position: fixed;
 		left: v.$sidebar-width;
 		padding: $padding;
-		padding-bottom: 0;
 		width: calc(100% - v.$sidebar-width - $padding * 2);
-		height: calc(100% - $padding);
+		height: calc(100% - $padding * 2);
 	}
 }
 

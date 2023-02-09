@@ -19,27 +19,70 @@ import Modal, { ModalInput } from "./components/Modal";
 import Notifications from "./components/Notifications";
 
 function App() {
+	const [appKey, setAppKey] = useState(Date.now());
 	const [loading, setLoading] = useState(true);
 	const [user, setUser] = useState(null);
 
+	const updateAppKey = () => {
+		setAppKey(Date.now());
+	}
+
+	// New project
+	const [newProjectModal, setNewProjectModal] = useState(false);
+	const [newProjectName, setNewProjectName] = useState("");
+
+	const createNewProject = async () => {
+		if (newProjectName === "") {
+			return {
+				error: true,
+				error_message: "A project name is required"
+			}
+		}
+
+		const { error } = await supabase.from("projects").insert({
+			name: newProjectName,
+			user_uuid: user.id
+		})
+
+		if (error) {
+			if (error.code == "23505") { // Duplicate name
+				return {
+					error: true,
+					error_message: "A project with this name already exists"
+				}
+			}
+		}
+
+		updateAppKey();
+		createNotification("Project created", newProjectName + " has been created");
+		setNewProjectName("");
+	}
+
 	// New page
 	const [newPageModal, setNewPageModal] = useState(false);
-	const [newPageProject, setNewPageProject] = useState(null);
+	const [newPageProjectId, setNewPageProjectId] = useState(null);
 	const [newPageName, setNewPageName] = useState("");
 
-	const openNewPageModal = (project) => {
+	const openNewPageModal = (projectId) => {
 		setNewPageModal(true);
-		setNewPageProject(project);
+		setNewPageProjectId(projectId);
 		setNewPageName("");
 	};
 
-	const createNewPage = () => {
+	const createNewPage = async () => {
 		if (newPageName === "") {
 			return {
 				error: true,
-				error_message: "A name is required",
+				error_message: "A page name is required"
 			};
 		}
+
+		const { error } = await supabase.from("pages").insert({
+			name: newPageName,
+			project: newPageProjectId,
+			content: "# " + newPageName
+		})
+
 		createNotification("Page created", newPageName + " has been created");
 	};
 
@@ -88,10 +131,11 @@ function App() {
 	}
 
 	return (
-		<AppContext.Provider value={{ user, createNotification }}>
+		<AppContext.Provider value={{ appKey: appKey, user, createNotification }}>
 			<ModalContext.Provider
 				value={{
-					openNewPageModal: openNewPageModal,
+					openNewProjectModal: () => setNewProjectModal(true),
+					openNewPageModal: openNewPageModal
 				}}
 			>
 				<BrowserRouter>
@@ -152,7 +196,7 @@ function App() {
 					{/* Modals */}
 					{newPageModal ? (
 						<Modal
-							title="Create new page"
+							title="Create a new page"
 							onClose={() => setNewPageModal(false)}
 							onSubmit={createNewPage}
 						>
@@ -160,10 +204,25 @@ function App() {
 								type="text"
 								label="Name"
 								value={newPageName}
+								placeholder="Some page name"
 								onChange={setNewPageName}
+								autoFocus
 							/>
 						</Modal>
 					) : null}
+
+					{newProjectModal ?
+						<Modal title="Create a new project" onClose={() => setNewProjectModal(false)} onSubmit={createNewProject}>
+							<ModalInput
+								type="text"
+								label="Name"
+								value={newProjectName}
+								placeholder="My awesome project"
+								onChange={setNewProjectName}
+								autoFocus
+							/>
+						</Modal>
+						: null}
 				</BrowserRouter>
 			</ModalContext.Provider>
 		</AppContext.Provider>

@@ -13,27 +13,24 @@ import AppContext from "../contexts/AppContext";
 import ModalContext from "../contexts/ModalContext";
 
 const Project = () => {
-	const { user } = useContext(AppContext);
 	const { openNewPageModal } = useContext(ModalContext);
 	const { projectId } = useParams();
+
 	const [project, setProject] = useState(null);
 	const [pages, setPages] = useState([]);
+	const [currentPageId, setCurrentPageId] = useState(null);
 	const [markdown, setMarkdown] = useState("");
 	const [previewMode, setPreviewMode] = useState(false);
 
 	useEffect(() => {
-		// getProject();
-		// getPages();
-
-		setProject({ name: "Test project" });
-		// setPages([{ id: 1, name: "Test Page" }]);
-		setPages([]);
+		getProject();
+		getPages();
 	}, [projectId]);
 
 	const getProject = async () => {
 		const { data, error } = await supabase
 			.from("projects")
-			.select(`name`)
+			.select(`id, name`)
 			.eq("id", projectId);
 
 		setProject(data[0]);
@@ -42,9 +39,11 @@ const Project = () => {
 	const getPages = async () => {
 		const { data, error } = await supabase
 			.from("pages")
-			.select(`id, name`)
+			.select(`id, name, content`)
 			.eq("project", projectId);
 		setPages(data);
+		setCurrentPageId(data[0].id);
+		setMarkdown(data[0].content);
 	};
 
 	return (
@@ -52,56 +51,64 @@ const Project = () => {
 			<Sidebar />
 
 			<div className="app-content project">
-				<div className="flex justify-between">
-					<div className="flex flex-col">
-						<div className="title-bottom-space">
-							{project ? project.name : "..."}
+				<div className="project__main-container">
+					<div className="project__header">
+						<div className="flex flex-col">
+							<div className="title-bottom-space">
+								{project ? project.name : "..."}
+							</div>
+							<Link
+								to="https://docs.domain.com"
+								target="_blank"
+								className="text-sub flex items-center"
+							>
+								docs.domain.com
+							</Link>
 						</div>
-						<Link
-							to="https://docs.domain.com"
-							target="_blank"
-							className="text-sub flex items-center"
-						>
-							docs.domain.com
-						</Link>
+						{pages.length !== 0 ? (
+							<div className="flex gap">
+								<select>
+									{pages.map((page, key) => (
+										<option key={key} value={page.id}>
+											{page.name}
+										</option>
+									))}
+								</select>
+								<button onClick={() => openNewPageModal(project.id)}>New page</button>
+							</div>
+						) : null}
 					</div>
-					{pages.length !== 0 ? (
-						<select>
-							{pages.map((page, key) => (
-								<option key={key} value={page.id}>
-									{page.name}
-								</option>
-							))}
-						</select>
-					) : null}
-				</div>
 
-				{pages.length !== 0 ? (
-					<>
-						<ProjectEditor
-							markdown={markdown}
-							setMarkdown={setMarkdown}
-							previewMode={previewMode}
-						/>
-						<ControlBar
-							previewMode={previewMode}
-							togglePreviewMode={() =>
-								setPreviewMode(!previewMode)
-							}
-						/>
-					</>
-				) : (
-					<div className="project__no-pages center">
-						<div className="text-sub">
-							Create your first page to get started
+					{pages.length !== 0 ? (
+						<>
+							<ProjectEditor
+								markdown={markdown}
+								setMarkdown={setMarkdown}
+								previewMode={previewMode}
+							/>
+							<ControlBar
+								previewMode={previewMode}
+								togglePreviewMode={() =>
+									setPreviewMode(!previewMode)
+								}
+							/>
+						</>
+					) : (
+						<div className="project__no-pages center">
+							<div className="text-sub">
+								Create your first page to get started
+							</div>
+							<button className="center-x" onClick={() => openNewPageModal(project.id)}>
+								Create
+							</button>
 						</div>
-						<button className="center-x" onClick={openNewPageModal}>
-							Create
-						</button>
-					</div>
-				)}
+					)}
+
+
+				</div>
+				<ProjectSidebar project={project} page={pages.find((page) => page.id === currentPageId)} />
 			</div>
-		</div>
+		</div >
 	);
 };
 
@@ -159,7 +166,7 @@ const ProjectEditor = ({ markdown, setMarkdown, previewMode }) => {
 				/>
 			) : (
 				<textarea
-					placeholder="Start writing here..."
+					placeholder="Start writing your markdown page here..."
 					value={markdown}
 					onChange={(e) => setMarkdown(e.target.value)}
 				></textarea>
@@ -167,5 +174,16 @@ const ProjectEditor = ({ markdown, setMarkdown, previewMode }) => {
 		</div>
 	);
 };
+
+const ProjectSidebar = ({ project, page }) => {
+	return <div className="project__sidebar">
+		<div className="project__sidebar__section">
+			<div className="project_sidebar__section__name">Project settings</div>
+		</div>
+		<div className="project__sidebar__section">
+			<div className="project_sidebar__section__name">Page settings</div>
+		</div>
+	</div>
+}
 
 export default Project;

@@ -36,7 +36,7 @@ const Modal = ({ title, onClose, onSubmit, children }) => {
 
 				<div className="modal__footer">
 					<button
-						className="transparent"
+						className="danger"
 						onClick={() => onCloseHandler(null)}
 					>
 						Cancel
@@ -50,14 +50,17 @@ const Modal = ({ title, onClose, onSubmit, children }) => {
 	);
 };
 
-export const ModalInput = ({ type, label, value, onChange }) => {
+export const ModalInput = ({ type, label, value, placeholder, autoFocus, onChange }) => {
 	return (
 		<div className="modal__body__input">
 			<label>{label}</label>
 			<input
 				type={type}
 				value={value}
+				placeholder={placeholder}
 				onChange={(e) => onChange(e.target.value)}
+				spellCheck={false}
+				autoFocus={autoFocus}
 			/>
 		</div>
 	);

@@ -1,4 +1,7 @@
 import { Link } from "react-router-dom";
+import { useContext, useEffect, useState } from "react";
+import AppContext from "../contexts/AppContext";
+import { supabase } from "../supbaseClient";
 
 import Sidebar from "../components/Sidebar";
 
@@ -6,17 +9,16 @@ import Sidebar from "../components/Sidebar";
 import { BiChevronRight } from "react-icons/bi";
 
 import "../assets/styles/cards.scss";
-import { useContext, useEffect, useState } from "react";
-import AppContext from "../contexts/AppContext";
-import { supabase } from "../supbaseClient";
+import ModalContext from "../contexts/ModalContext";
 
 const Projects = () => {
-	const { user } = useContext(AppContext);
+	const { appKey, user } = useContext(AppContext);
+	const { openNewProjectModal } = useContext(ModalContext);
 	const [projects, setProjects] = useState([]);
 
 	useEffect(() => {
 		getProjects();
-	}, []);
+	}, [appKey]);
 
 	const getProjects = async () => {
 		const { data, error } = await supabase
@@ -30,14 +32,17 @@ const Projects = () => {
 	return (
 		<div className="app-container">
 			<Sidebar activeItem={1} />
-			<div className="app-content grid grid-4">
-				{projects.map((project, key) => (
-					<ProjectCard
-						key={key}
-						title={project.name}
-						target={"/project/" + project.id}
-					/>
-				))}
+			<div className="app-content">
+				<button className="row-spacer" onClick={openNewProjectModal}>New project</button>
+				<div className="grid grid-4">
+					{projects.map((project, key) => (
+						<ProjectCard
+							key={key}
+							title={project.name}
+							target={"/project/" + project.id}
+						/>
+					))}
+				</div>
 			</div>
 		</div>
 	);

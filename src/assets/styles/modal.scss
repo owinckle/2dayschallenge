@@ -10,9 +10,19 @@
 	z-index: 9999;
 	opacity: 1;
 	transition: opacity 0.3s ease-in-out;
+	animation: load-animation .3s ease-in-out;
 
 	&.modal--closing {
 		opacity: 0;
+	}
+
+	@keyframes load-animation {
+		0% {
+			opacity: 0;
+		}
+		100% {
+			opacity: 1;
+		}
 	}
 }
 
@@ -30,6 +40,16 @@
 	background-color: v.$bg2;
 	height: 100%;
 	transition: right 0.3s ease-in-out;
+	animation: load-animation .3s ease-in-out;
+
+	@keyframes load-animation {
+		0% {
+			right: calc($width * -1);
+		}
+		100% {
+			right: 0;
+		}
+	}
 
 	&.modal--closing {
 		right: calc($width * -1);

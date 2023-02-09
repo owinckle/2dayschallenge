@@ -1,7 +1,11 @@
 @use "variables" as v;
 
 .project {
-	$control-bar-height: 60px;
+	$control-bar-height: 70px;
+	$sidebar-width: 300px;
+
+	display: grid;
+	grid-template-columns: auto $sidebar-width;
 
 	select,
 	option {
@@ -11,6 +15,13 @@
 	select:hover,
 	select:focus {
 		border-color: v.$border-color;
+	}
+
+	.project__main-container {
+		width: 100%;
+		display: flex;
+		flex-direction: column;
+		gap: 15px;
 	}
 
 	.project__no-pages {
@@ -25,18 +36,26 @@
 		}
 	}
 
+	.project__sidebar {
+		background: v.$bg2;
+		position: relative;
+		top: -25px;
+		height: 100%;
+		width: calc(100% - 25px);
+		padding: 25px;
+	}
+
 	.project__control-bar {
-		position: fixed;
+		position: relative;
 		background-color: v.$bg2;
-		height: calc($control-bar-height - 1px); /* border size */
-		bottom: 0;
-		left: v.$sidebar-width;
+		height: $control-bar-height;
 		padding: 0 25px;
-		width: calc(100% - v.$sidebar-width - 25px * 2);
+		width: calc(100% - 25px);
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
-		border-top: 1px solid v.$border-color;
+		bottom: -25px;
+		left: -25px;
 
 		.project__control-bar__controls {
 			display: flex;
@@ -44,15 +63,19 @@
 		}
 	}
 
+	.project__header {
+		display: flex;
+		justify-content: space-between;
+		padding-right: 25px;
+	}
+
 	.project__editor {
-		$spacing: 15px;
-		margin-top: $spacing;
-		padding-top: $spacing;
+		padding-top: 15px;
 		border-top: 1px solid v.$border-color;
-		height: calc(
-			100% - $spacing * 2 - $control-bar-height - 25px * 2
-		); // 25px: content padding
+		height: calc(100% - $control-bar-height - 25px); // 25px: content padding
 		line-height: 1.8;
+		margin-bottom: -25px;
+		margin-right: 25px;
 
 		&.project__editor--preview {
 			overflow-y: auto;
