@@ -10,7 +10,7 @@
 	z-index: 9999;
 	opacity: 1;
 	transition: opacity 0.3s ease-in-out;
-	animation: load-animation .3s ease-in-out;
+	animation: load-animation 0.3s ease-in-out;
 
 	&.modal--closing {
 		opacity: 0;
@@ -40,7 +40,7 @@
 	background-color: v.$bg2;
 	height: 100%;
 	transition: right 0.3s ease-in-out;
-	animation: load-animation .3s ease-in-out;
+	animation: load-animation 0.3s ease-in-out;
 
 	@keyframes load-animation {
 		0% {
@@ -61,11 +61,15 @@
 	}
 
 	.modal__footer {
-		height: $footer-height;
+		height: calc($footer-height - 1px);
 		border-top: 1px solid v.$border-color;
 		display: flex;
 		gap: 15px;
 		justify-content: right;
+
+		button {
+			padding: 5px 10px;
+		}
 	}
 
 	.modal__head,
@@ -77,7 +81,7 @@
 
 	.modal__body {
 		padding: $padding;
-		height: calc(100% - $footer-height - $head-height - $padding * 2);
+		height: calc(100% - $footer-height - $head-height - $padding * 2 + 1px);
 		overflow-y: auto;
 
 		.modal__body__input {

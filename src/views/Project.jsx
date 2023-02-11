@@ -13,7 +13,7 @@ import AppContext from "../contexts/AppContext";
 import ModalContext from "../contexts/ModalContext";
 
 const Project = () => {
-	const { appKey } = useContext(AppContext);
+	const { appKey, createNotification } = useContext(AppContext);
 	const { openNewPageModal } = useContext(ModalContext);
 	const { projectId } = useParams();
 
@@ -37,7 +37,7 @@ const Project = () => {
 		setProject(data[0]);
 	};
 
-	const getPages = async () => {
+	const getPages = async (isUpdate) => {
 		const { data, error } = await supabase
 			.from("pages")
 			.select(`id, name, content`)
@@ -45,14 +45,55 @@ const Project = () => {
 		setPages(data);
 
 		if (data.length != 0) {
-			setCurrentPageId(data[0].id);
-			setMarkdown(data[0].content);
+			if (!isUpdate) {
+				setCurrentPageId(data[0].id);
+				setMarkdown(data[0].content);
+			}
 		}
 	};
 
 	const selectPage = (pageId) => {
 		setCurrentPageId(pageId);
 		setMarkdown(pages.find((page) => page.id === parseInt(pageId)).content);
+	};
+
+	const updateProject = async (name) => {
+		const { error } = await supabase
+			.from("projects")
+			.update({ name: name })
+			.eq("id", parseInt(projectId));
+
+		if (error) {
+			createNotification(
+				"Error",
+				"An error occured while updating your project"
+			);
+		} else {
+			createNotification(
+				"Project updated",
+				"Your project has been updated"
+			);
+		}
+
+		getProject();
+	};
+
+	const updatePage = async (pageId, name) => {
+		const { error } = await supabase
+			.from("pages")
+			.update({ name: name, content: markdown })
+			.eq("id", pageId);
+
+		if (error) {
+			createNotification(
+				"Error",
+				"An error occured while updating your page"
+			);
+		} else {
+			createNotification("Page updated", "Your page has been updated");
+		}
+
+		getPages(true);
 	};
 
 	return (
@@ -106,6 +147,20 @@ const Project = () => {
 								togglePreviewMode={() =>
 									setPreviewMode(!previewMode)
 								}
+								savePage={() =>
+									updatePage(
+										pages.find(
+											(page) =>
+												page.id ===
+												parseInt(currentPageId)
+										).id,
+										pages.find(
+											(page) =>
+												page.id ===
+												parseInt(currentPageId)
+										).name
+									)
+								}
 							/>
 						</>
 					) : (
@@ -124,14 +179,18 @@ const Project = () => {
 				</div>
 				<ProjectSidebar
 					project={project}
-					page={pages.find((page) => page.id === currentPageId)}
+					page={pages.find(
+						(page) => page.id === parseInt(currentPageId)
+					)}
+					saveProject={updateProject}
+					savePage={updatePage}
 				/>
 			</div>
 		</div>
 	);
 };
 
-const ControlBar = ({ previewMode, togglePreviewMode }) => {
+const ControlBar = ({ previewMode, togglePreviewMode, savePage }) => {
 	return (
 		<div className="project__control-bar">
 			<div className="text-sub">Saved at 4:53pm</div>
@@ -142,7 +201,7 @@ const ControlBar = ({ previewMode, togglePreviewMode }) => {
 				>
 					Preview
 				</button>
-				<button>Save</button>
+				<button onClick={savePage}>Save</button>
 			</div>
 		</div>
 	);
@@ -194,26 +253,59 @@ const ProjectEditor = ({ markdown, setMarkdown, previewMode }) => {
 	);
 };
 
-const ProjectSidebar = ({ project, page }) => {
+const ProjectSidebar = ({ project, page, saveProject, savePage }) => {
+	const [projectName, setProjectName] = useState("");
+	const [pageName, setPageName] = useState("");
+
+	useEffect(() => {
+		if (project) {
+			setProjectName(project.name);
+		}
+
+		if (page) {
+			setPageName(page.name);
+		}
+	}, [project, page]);
+
 	return (
 		<div className="project__sidebar">
-			<div className="project__sidebar__section">
-				<div className="project__sidebar__section__name">
-					Project settings
-				</div>
-				<div className="project__sidebar__input">
-					<label>Project name</label>
-					<input type="text" value={project.name} />
-				</div>
-			</div>
-			<div className="project__sidebar__section">
-				<div className="project__sidebar__section__name">
-					Page settings
-				</div>
-				<div className="project__sidebar__input">
-					<label>Page name</label>
-					<input type="text" value={page.name} />
-				</div>
+			<div className="project__sidebar__body">
+				{project ? (
+					<div className="project__sidebar__section">
+						<div className="project__sidebar__section__name">
+							Project settings
+						</div>
+						<div className="project__sidebar__input">
+							<label>Project name</label>
+							<input
+								type="text"
+								value={projectName}
+								onChange={(e) => setProjectName(e.target.value)}
+							/>
+						</div>
+						<button onClick={() => saveProject(projectName)}>
+							Save
+						</button>
+					</div>
+				) : null}
+				{page ? (
+					<div className="project__sidebar__section">
+						<div className="project__sidebar__section__name">
+							Page settings
+						</div>
+						<div className="project__sidebar__input">
+							<label>Page name</label>
+							<input
+								type="text"
+								value={pageName}
+								onChange={(e) => setPageName(e.target.value)}
+							/>
+						</div>
+						<button onClick={() => savePage(page.id, pageName)}>
+							Save
+						</button>
+					</div>
+				) : null}
 			</div>
 		</div>
 	);

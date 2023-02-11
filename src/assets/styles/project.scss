@@ -1,7 +1,7 @@
 @use "variables" as v;
 
 .project {
-	$control-bar-height: 70px;
+	$control-bar-height: 60px;
 	$sidebar-width: 475px;
 
 	display: grid;
@@ -37,32 +37,43 @@
 	}
 
 	.project__sidebar {
+		$padding: 25px;
+
 		background: v.$bg2;
 		position: relative;
 		top: -25px;
-		height: 100%;
+		height: calc(100% + $padding);
 		width: calc(100% - 25px - 1px);
-		padding: 25px;
 		border-left: 1px solid v.$border-color;
+		padding: $padding;
+		padding-bottom: 0;
 
-		.project__sidebar__section {
-			$spacing: 15px;
-			margin-bottom: $spacing;
-			padding-bottom: $spacing;
+		.project__sidebar__body {
+			height: 100%;
+			overflow-y: auto;
 
-			.project__sidebar__section__name {
-				font-size: 1.1rem;
+			.project__sidebar__section {
+				$spacing: 15px;
+
 				margin-bottom: $spacing;
-				color: v.$text-sub;
-			}
-
-			.project__sidebar__input {
+				padding-bottom: $spacing;
 				display: flex;
-				justify-content: space-between;
-				align-items: center;
+				flex-direction: column;
+				gap: 15px;
 
-				input {
-					width: 60%;
+				.project__sidebar__section__name {
+					font-size: 1.1rem;
+					color: v.$text-sub;
+				}
+
+				.project__sidebar__input {
+					display: flex;
+					justify-content: space-between;
+					align-items: center;
+
+					input {
+						width: 60%;
+					}
 				}
 			}
 		}
@@ -79,10 +90,15 @@
 		justify-content: space-between;
 		bottom: -25px;
 		left: -25px;
+		border-top: 1px solid v.$border-color;
 
 		.project__control-bar__controls {
 			display: flex;
 			gap: 15px;
+
+			button {
+				padding: 5px 10px;
+			}
 		}
 	}
 
@@ -104,6 +120,10 @@
 
 		&.project__editor--preview {
 			overflow-y: auto;
+
+			*:first-child {
+				margin-top: 0;
+			}
 		}
 
 		textarea {
