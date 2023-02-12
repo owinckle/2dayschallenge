@@ -26,13 +26,13 @@ const Sidebar = ({ activeItem }) => {
 			<div className="sidebar__links">
 				<Item
 					label={<RxDashboard />}
-					target="/dashboard"
+					target="/app"
 					tooltip="Dashboard"
 					isActive={activeItem === 0}
 				/>
 				<Item
 					label={<IoConstructOutline />}
-					target="/projects"
+					target="/app/projects"
 					tooltip="Projects"
 					isActive={activeItem === 1}
 				/>

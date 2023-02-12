@@ -1,11 +1,12 @@
 {
-  "name": "usermd",
+  "name": "frontend",
   "private": true,
   "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build"
+    "build": "vite build",
+    "exp-dev": "node server/app.js"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.7.1",

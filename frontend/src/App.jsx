@@ -153,7 +153,7 @@ function App() {
 				<BrowserRouter>
 					<Routes>
 						<Route
-							path="/dashboard"
+							path="/app"
 							element={
 								<SecuredRoute
 									component={<Dashboard />}
@@ -162,7 +162,7 @@ function App() {
 							}
 						/>
 						<Route
-							path="/projects"
+							path="/app/projects"
 							element={
 								<SecuredRoute
 									component={<Projects />}
@@ -171,7 +171,7 @@ function App() {
 							}
 						/>
 						<Route
-							path="/project/:projectId"
+							path="/app/project/:projectId"
 							element={
 								<SecuredRoute
 									component={<Project />}

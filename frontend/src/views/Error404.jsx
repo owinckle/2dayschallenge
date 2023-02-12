@@ -7,7 +7,7 @@ const Error404 = () => {
 			<div className="error404 flex flex-col">
 				<div className="text-center text-6xl">404</div>
 				<div className="text-center">This page doesn't exist</div>
-				<Link to="/dashboard" className="text-center">
+				<Link to="/app" className="text-center">
 					<button>Take me back</button>
 				</Link>
 			</div>

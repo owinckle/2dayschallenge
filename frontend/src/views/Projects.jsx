@@ -33,13 +33,15 @@ const Projects = () => {
 		<div className="app-container">
 			<Sidebar activeItem={1} />
 			<div className="app-content">
-				<button className="row-spacer" onClick={openNewProjectModal}>New project</button>
+				<button className="row-spacer" onClick={openNewProjectModal}>
+					New project
+				</button>
 				<div className="grid grid-4">
 					{projects.map((project, key) => (
 						<ProjectCard
 							key={key}
 							title={project.name}
-							target={"/project/" + project.id}
+							target={"/app/project/" + project.id}
 						/>
 					))}
 				</div>
